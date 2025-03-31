@@ -1,27 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 
+// Type definitions
+type Address = {
+  original: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  postcode: string;
+  issues: string;
+  isEmpty: boolean;
+};
+
+type ParseResult = {
+  data: string[][];
+  errors: any[];
+  meta: any;
+};
 
 const AddressTable = () => {
-  const [addresses, setAddresses] = useState([]);
+  const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 
   // Function to properly capitalize words
-  function toProperCase(str) {
+  const toProperCase = (str: string): string => {
     if (!str) return '';
     
     const lowercaseWords = ['of', 'the', 'in', 'on', 'at', 'by', 'and', 'or', 'a', 'an'];
-    const specialCases = {
+    const specialCases: Record<string, string> = {
       'nsw': 'NSW', 'vic': 'VIC', 'qld': 'QLD', 'sa': 'SA', 'wa': 'WA',
       'tas': 'TAS', 'nt': 'NT', 'act': 'ACT', 'st': 'St', 'rd': 'Rd',
       'dr': 'Dr', 'ave': 'Ave', 'cres': 'Cres', 'cr': 'Cr', 'ct': 'Ct',
       'pl': 'Pl', 'ln': 'Ln', 'hwy': 'Hwy', 'mt': 'Mt'
     };
     
-    return str.toLowerCase().split(' ').map((word, index) => {
+    return str.toLowerCase().split(' ').map((word: string, index: number) => {
       const lowerWord = word.toLowerCase();
       if (specialCases[lowerWord]) return specialCases[lowerWord];
       if (index > 0 && lowercaseWords.includes(lowerWord)) return lowerWord;
@@ -40,17 +56,18 @@ const AddressTable = () => {
       
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     }).join(' ');
-  }
+  };
 
   // Function to parse Australian addresses
-  function parseAustralianAddress(addressStr) {
+  const parseAustralianAddress = (addressStr: string) => {
     if (!addressStr || typeof addressStr !== 'string') {
       return { 
         streetAddress: '', 
         city: '', 
         state: '', 
         postcode: '',
-        issues: 'Empty or invalid address'
+        issues: 'Empty or invalid address',
+        isEmpty: false
       };
     }
     
@@ -61,7 +78,8 @@ const AddressTable = () => {
         city: '', 
         state: '', 
         postcode: '',
-        issues: 'Empty address' 
+        issues: 'Empty address',
+        isEmpty: false
       };
     }
     
@@ -83,11 +101,12 @@ const AddressTable = () => {
     
     const postcodeRegex = /\b\d{4}\b/;
     const parts = processedAddress.split(',').map(part => part.trim());
+    
     let streetAddress = '';
     let city = '';
     let state = '';
     let postcode = '';
-    let issues = [];
+    let issues: string[] = [];
     
     // Extract state
     let stateIndex = -1;
@@ -105,12 +124,10 @@ const AddressTable = () => {
     if (!state) issues.push('Missing state');
     
     // Extract postcode
-    let postcodeIndex = -1;
     for (let i = 0; i < parts.length; i++) {
       const postcodeMatch = parts[i].match(postcodeRegex);
       if (postcodeMatch) {
         postcode = postcodeMatch[0];
-        postcodeIndex = i;
         break;
       }
     }
@@ -133,7 +150,7 @@ const AddressTable = () => {
     
     if (!streetAddress) issues.push('Missing street address');
     
-    // Cleanup
+    // Handle special cases and cleanup
     if (city) {
       for (const { code } of statePatterns) {
         city = city.replace(new RegExp(`\\b${code}\\b`, 'gi'), '').trim();
@@ -173,9 +190,10 @@ const AddressTable = () => {
       city,
       state,
       postcode,
-      issues: issues.length > 0 ? issues.join('; ') : ''
+      issues: issues.length > 0 ? issues.join('; ') : '',
+      isEmpty: false
     };
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -187,8 +205,8 @@ const AddressTable = () => {
         Papa.parse(csvData, {
           header: false,
           skipEmptyLines: false,
-          complete: (results) => {
-            const processedAddresses = results.data.map((row, index) => {
+          complete: (results: ParseResult) => {
+            const processedAddresses = results.data.map((row: string[], index: number) => {
               const rawValue = row[0] || '';
               
               if (index === 0 || rawValue.trim() === '') {
@@ -205,8 +223,7 @@ const AddressTable = () => {
                 const parsed = parseAustralianAddress(rawValue);
                 return {
                   original: rawValue,
-                  ...parsed,
-                  isEmpty: false
+                  ...parsed
                 };
               }
             });
@@ -214,12 +231,12 @@ const AddressTable = () => {
             setAddresses(processedAddresses);
             setLoading(false);
           },
-          error: (error) => {
+          error: (error: any) => {
             setError(`CSV parsing error: ${error.message}`);
             setLoading(false);
           }
         });
-      } catch (error) {
+      } catch (error: any) {
         setError(`Error loading data: ${error.message}`);
         setLoading(false);
       }
@@ -227,23 +244,6 @@ const AddressTable = () => {
 
     fetchData();
   }, []);
-
-  // Stats calculations
-  const stats = React.useMemo(() => {
-    if (!addresses.length) return null;
-    
-    const stateCount = {};
-    addresses.forEach(addr => {
-      if (addr.state && !addr.isEmpty) {
-        stateCount[addr.state] = (stateCount[addr.state] || 0) + 1;
-      }
-    });
-    
-    return {
-      total: addresses.filter(addr => !addr.isEmpty).length,
-      stateDistribution: stateCount
-    };
-  }, [addresses]);
 
   // Table rows - all non-empty rows
   const tableAddresses = addresses.filter(addr => !addr.isEmpty);
@@ -304,42 +304,44 @@ const AddressTable = () => {
           <input 
             type="file" 
             accept=".csv"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                  Papa.parse(event.target.result, {
-                    header: false,
-                    skipEmptyLines: false,
-                    complete: (results) => {
-                      const processed = results.data.map((row, index) => {
-                        const rawValue = row[0] || '';
-                        if (index === 0 || rawValue.trim() === '') {
-                          return {
-                            original: rawValue,
-                            streetAddress: '',
-                            city: '',
-                            state: '',
-                            postcode: '',
-                            issues: index === 0 ? '' : 'Empty row',
-                            isEmpty: index !== 0 && rawValue.trim() === ''
-                          };
-                        } else {
-                          const parsed = parseAustralianAddress(rawValue);
-                          return {
-                            original: rawValue,
-                            ...parsed,
-                            isEmpty: false
-                          };
-                        }
-                      });
-                      setAddresses(processed);
-                    }
-                  });
-                };
-                reader.readAsText(file);
-              }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const files = e.target.files;
+              if (!files || files.length === 0) return;
+              
+              const file = files[0];
+              const reader = new FileReader();
+              reader.onload = (event: ProgressEvent<FileReader>) => {
+                if (!event.target?.result) return;
+                const csvData = event.target.result as string;
+                Papa.parse(csvData, {
+                  header: false,
+                  skipEmptyLines: false,
+                  complete: (results: ParseResult) => {
+                    const processed = results.data.map((row: string[], index: number) => {
+                      const rawValue = row[0] || '';
+                      if (index === 0 || rawValue.trim() === '') {
+                        return {
+                          original: rawValue,
+                          streetAddress: '',
+                          city: '',
+                          state: '',
+                          postcode: '',
+                          issues: index === 0 ? '' : 'Empty row',
+                          isEmpty: index !== 0 && rawValue.trim() === ''
+                        };
+                      } else {
+                        const parsed = parseAustralianAddress(rawValue);
+                        return {
+                          original: rawValue,
+                          ...parsed
+                        };
+                      }
+                    });
+                    setAddresses(processed);
+                  }
+                });
+              };
+              reader.readAsText(file);
             }}
           />
         </div>
