@@ -1,0 +1,200 @@
+// Variables
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+$error-color: #e74c3c;
+$light-gray: #f8f9fa;
+$border-color: #dee2e6;
+$text-color: #333;
+$shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+// Base Styles
+.address-table-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: $text-color;
+
+  h1 {
+    color: darken($primary-color, 15%);
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    text-align: center;
+    border-bottom: 2px solid $primary-color;
+    padding-bottom: 0.5rem;
+  }
+}
+
+// Controls Section
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .file-upload {
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: darken($primary-color, 10%);
+    }
+
+    input[type="file"] {
+      padding: 0.5rem;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+      width: 100%;
+    }
+  }
+
+  .download-btn {
+    background-color: $secondary-color;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken($secondary-color, 10%);
+    }
+
+    &:disabled {
+      background-color: lighten($secondary-color, 20%);
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Table Styles
+.address-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: $shadow;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border-radius: 8px;
+
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    border: 1px solid $border-color;
+  }
+
+  th {
+    background-color: $primary-color;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+
+  tr {
+    transition: background-color 0.2s;
+
+    &:nth-child(even) {
+      background-color: $light-gray;
+    }
+
+    &:hover {
+      background-color: lighten($primary-color, 35%);
+    }
+  }
+
+  .error-cell {
+    color: $error-color;
+    font-weight: 500;
+  }
+}
+
+// Pagination Styles
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .page-info {
+    font-size: 0.9rem;
+    color: lighten($text-color, 20%);
+  }
+
+  .page-controls {
+    display: flex;
+    gap: 0.5rem;
+
+    button {
+      padding: 0.5rem 1rem;
+      border: 1px solid $border-color;
+      background-color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover:not(:disabled) {
+        background-color: $primary-color;
+        color: white;
+        border-color: $primary-color;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .page-count {
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+    }
+  }
+}
+
+// Loading and Error States
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: $primary-color;
+}
+
+.error-state {
+  text-align: center;
+  padding: 2rem;
+  color: $error-color;
+  background-color: lighten($error-color, 40%);
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+// Responsive Adjustments
+@media (max-width: 768px) {
+  .address-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pagination {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .page-controls {
+      margin-top: 0.5rem;
+    }
+  }
+}
