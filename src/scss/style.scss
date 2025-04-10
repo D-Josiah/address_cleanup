@@ -3,5 +3,8 @@
     margin: 0;
     margin: 0;
   }
-
+  
+  @import "./pages/numberTable";
   @import "./pages/addressTable";
+  @import "./pages/nameTable";
+  @import "./pages/home";

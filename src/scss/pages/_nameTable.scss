@@ -1,0 +1,430 @@
+// Variables
+$primary-color: #4a6bff;
+$secondary-color: #34c759;
+$error-color: #ff3b30;
+$warning-color: #ffcc00;
+$light-gray: #f8f9fa;
+$medium-gray: #e9ecef;
+$dark-gray: #333;
+$white: #ffffff;
+$border-radius: 8px;
+$box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+$transition: all 0.25s ease;
+
+// Base Styles
+.name-splitter {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: $dark-gray;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  // Typography
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: $primary-color;
+    text-align: center;
+  }
+
+  &__description {
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: lighten($dark-gray, 20%);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  &__section-title {
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: $dark-gray;
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: $primary-color;
+      border-radius: 50%;
+      margin-right: 12px;
+    }
+  }
+
+  // Sections
+  &__section {
+    background: $white;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  // Upload Area
+  &__upload-area {
+    border: 2px dashed $medium-gray;
+    border-radius: $border-radius;
+    padding: 2rem;
+    text-align: center;
+    transition: $transition;
+    position: relative;
+    margin-bottom: 1rem;
+
+    &:hover {
+      border-color: $primary-color;
+    }
+  }
+
+  &__upload-icon,
+  &__success-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+    color: $primary-color;
+  }
+
+  &__success-icon {
+    color: $secondary-color;
+  }
+
+  &__upload-text {
+    margin: 0.5rem 0;
+    color: $dark-gray;
+    font-size: 1rem;
+  }
+
+  &__filename {
+    font-weight: 600;
+    margin: 0.5rem 0 1rem;
+    word-break: break-all;
+    color: $dark-gray;
+  }
+
+  &__file-input {
+    display: none;
+  }
+
+  // Buttons
+  &__button {
+    padding: 0.75rem 1.5rem;
+    border-radius: $border-radius;
+    font-weight: 500;
+    cursor: pointer;
+    transition: $transition;
+    border: none;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    &--primary {
+      background-color: $primary-color;
+      color: $white;
+
+      &:hover {
+        background-color: darken($primary-color, 8%);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        background-color: lighten($primary-color, 25%);
+        cursor: not-allowed;
+      }
+    }
+
+    &--secondary {
+      background-color: $white;
+      color: $primary-color;
+      border: 1px solid $primary-color;
+
+      &:hover {
+        background-color: lighten($primary-color, 45%);
+      }
+    }
+
+    &--download {
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+
+    &--process {
+      width: 100%;
+    }
+  }
+
+  &__button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  // Form Elements
+  &__form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $dark-gray;
+    font-size: 0.95rem;
+  }
+
+  &__select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $medium-gray;
+    border-radius: $border-radius;
+    background-color: $white;
+    font-size: 1rem;
+    transition: $transition;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    }
+
+    &--small {
+      width: auto;
+      min-width: 120px;
+    }
+  }
+
+  // Error Messages
+  &__error {
+    background-color: lighten($error-color, 40%);
+    border-left: 4px solid $error-color;
+    padding: 1rem;
+    border-radius: 0 $border-radius $border-radius 0;
+    margin-top: 1rem;
+  }
+
+  &__error-title {
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: $error-color;
+    font-size: 0.95rem;
+  }
+
+  &__error-message {
+    margin: 0;
+    color: darken($error-color, 10%);
+    font-size: 0.9rem;
+  }
+
+  // Preview Controls
+  &__preview-control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  // Tables
+  &__table-container {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    border: 1px solid $medium-gray;
+    border-radius: $border-radius;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  &__th {
+    background-color: $light-gray;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: $dark-gray;
+    border-bottom: 1px solid $medium-gray;
+    white-space: nowrap;
+  }
+
+  &__td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid $medium-gray;
+    vertical-align: top;
+  }
+
+  &__tr {
+    &--even {
+      background-color: $white;
+    }
+
+    &--odd {
+      background-color: $light-gray;
+    }
+
+    &:hover td {
+      background-color: darken($light-gray, 2%);
+    }
+  }
+
+  &__preview-info {
+    color: lighten($dark-gray, 30%);
+    font-size: 0.875rem;
+    margin: 0.5rem 0 0;
+    text-align: right;
+  }
+
+  // Processing Section
+  &__processing {
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  &__processing-text {
+    margin-bottom: 1rem;
+    font-weight: 500;
+    color: $dark-gray;
+  }
+
+  &__progress-container {
+    height: 8px;
+    background-color: $medium-gray;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    background-color: $primary-color;
+    transition: width 0.3s ease;
+  }
+
+  &__progress-text {
+    color: lighten($dark-gray, 30%);
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  // Results Section
+  &__results {
+    text-align: center;
+  }
+
+  &__success-message {
+    margin-bottom: 1.5rem;
+  }
+
+  &__success-title {
+    color: $secondary-color;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+  }
+
+  &__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__stat-card {
+    background-color: $light-gray;
+    border-radius: $border-radius;
+    padding: 1rem;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  &__stat-label {
+    font-size: 0.875rem;
+    color: lighten($dark-gray, 20%);
+    margin: 0 0 0.5rem;
+  }
+
+  &__stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $primary-color;
+    margin: 0;
+  }
+
+  &__preview-title {
+    text-align: left;
+    margin: 1.5rem 0 1rem;
+    font-size: 1.1rem;
+    color: $dark-gray;
+  }
+
+  &__help-text {
+    color: lighten($dark-gray, 30%);
+    font-size: 0.875rem;
+    margin: 1rem 0 0;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  // Responsive Adjustments
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    &__title {
+      font-size: 1.75rem;
+    }
+
+    &__description {
+      font-size: 1rem;
+    }
+
+    &__stats-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    &__button-group {
+      flex-direction: column;
+    }
+
+    &__button {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    &__upload-area {
+      padding: 1.5rem;
+    }
+
+    &__section {
+      padding: 1.25rem;
+    }
+
+    &__stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}
